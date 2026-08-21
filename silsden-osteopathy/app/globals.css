@@ -1,0 +1,97 @@
+@import "tailwindcss";
+
+@theme inline {
+  /* Colour system — deep muted purple as the deliberate accent, a warm
+     neutral palette carrying most of the page. */
+  --color-cream: #faf6f1;
+  --color-mist: #f3eef4;
+  --color-white: #ffffff;
+
+  --color-plum-950: #241a2b;
+  --color-plum-900: #34243f;
+  --color-plum-800: #4a3359;
+  --color-plum-700: #5e4272;
+  --color-plum-500: #8264a3;
+  --color-lavender: #cdbcd8;
+  --color-lavender-soft: #e6dced;
+
+  --color-charcoal: #322b38;
+  --color-charcoal-soft: #6b6470;
+  --color-line: #e3dbe4;
+
+  --font-display: var(--font-fraunces);
+  --font-sans: var(--font-inter);
+
+  --container-content: 1200px;
+  --container-narrow: 850px;
+}
+
+:root {
+  --background: var(--color-cream);
+  --foreground: var(--color-charcoal);
+}
+
+* {
+  border-color: var(--color-line);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+}
+
+::selection {
+  background: var(--color-lavender);
+  color: var(--color-plum-950);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-plum-700);
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+@layer utilities {
+  .section-y {
+    padding-top: 64px;
+    padding-bottom: 64px;
+  }
+  @media (min-width: 768px) {
+    .section-y {
+      padding-top: 80px;
+      padding-bottom: 80px;
+    }
+  }
+  @media (min-width: 1024px) {
+    .section-y {
+      padding-top: 110px;
+      padding-bottom: 110px;
+    }
+  }
+
+  .font-display {
+    font-family: var(--font-display);
+  }
+
+  .text-balance {
+    text-wrap: balance;
+  }
+}
