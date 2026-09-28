@@ -23,6 +23,7 @@ Hattersley Web Studio helps small businesses grow online through:
 - 🚧 Missed Call Text Back
 - 🚧 AI Social Posting
 - 🚧 Lead Qualification Agent
+- 🚧 Salon AI Receptionist (demo)
 
 ## Technology Stack
 
