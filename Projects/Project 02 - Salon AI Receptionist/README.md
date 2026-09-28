@@ -12,11 +12,18 @@ Stylists have their hands in someone's hair when the phone rings. Salons miss a 
 
 | File | Purpose |
 |---|---|
-| [`BUILD-PROMPT.md`](./BUILD-PROMPT.md) | The full build spec and prompt. Fill in the salon details, then paste it into Claude Code. |
+| [`BUILD-PROMPT.md`](./BUILD-PROMPT.md) | The full build spec and prompt, already filled in for **Beauty in Bloom, Ilkley**. Paste it into Claude Code. |
+| [`salons/beauty-in-bloom.yaml`](./salons/beauty-in-bloom.yaml) | Beauty in Bloom's config: team, services, hours, policies and FAQs. Replace the `# EST` prices before the demo. |
+| [`salons/beauty-in-bloom-research.md`](./salons/beauty-in-bloom-research.md) | What's confirmed, what still needs checking, pitch angles and sources. |
+| [`salons/_template.yaml`](./salons/_template.yaml) | Blank config for the next salon prospect. |
 
 ## Stack
 
 Vapi (voice) · Next.js + TypeScript on Vercel · Supabase (data and realtime) · n8n (automations) · Twilio (SMS)
+
+## Target salon
+
+**Beauty in Bloom**, 8 Cowpasture Road, Ilkley: an eco-conscious hair, beauty and bridal salon owned by Charlotte Hawkins. The AI receptionist is called **Poppy**.
 
 ## How to run the demo meeting (15 minutes)
 
@@ -27,12 +34,12 @@ Vapi (voice) · Next.js + TypeScript on Vercel · Supabase (data and realtime) �
 - Have the `/demo` web-call button open as a backup in case phone signal is poor.
 
 **In the meeting**
-1. **Ask first (2 min):** "Roughly how many calls do you miss a day? What happens to them?"
-2. **Hand them your laptop showing the dashboard, and ask them to ring the number from their own phone (5 min).** Let them try to book something awkward. Stay quiet.
-3. **Point at the screen (1 min):** the booking has appeared, and their phone has buzzed with the text.
-4. **Show the transcript and summary (2 min):** "Every call is logged like this, even at 11pm."
-5. **Try to break it (2 min):** ask about a complaint or an allergic reaction, and show the escalation text arriving on their phone.
-6. **Close (3 min):** the next step is a two-week pilot on their overflow or after-hours line.
+1. **Ask first (2 min):** "When your mobile rings while you're mid-colour or at a wedding, what happens to that call?"
+2. **Hand Charlotte your laptop showing the dashboard, and ask her to ring Poppy from her own phone (4 min).** Poppy greets her by name. Let her book something awkward, like a lash lift tomorrow. Stay quiet.
+3. **Point at the screen (1 min):** the booking has appeared, and her phone has buzzed with the text.
+4. **The bridal moment (3 min):** you call as a bride-to-be. Poppy congratulates you and captures the date, venue and party size, and Charlotte's phone gets a "New bridal enquiry" text. "That's the call you'd otherwise miss while you're at a wedding."
+5. **Show the transcript and summary (2 min):** "Every call is logged like this, even at 11pm."
+6. **Close (3 min):** the next step is a two-week pilot on missed and after-hours calls. It sits alongside Fresha, not instead of it.
 
 ## Rough running costs (check current pricing)
 

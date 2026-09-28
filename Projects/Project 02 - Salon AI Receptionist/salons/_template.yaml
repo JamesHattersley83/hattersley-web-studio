@@ -1,0 +1,65 @@
+# Salon config template: copy to salons/<salon-slug>.yaml and fill in.
+# Tags: # VERIFY = double-check, # EST = placeholder, replace before demo.
+# Full worked example: salons/beauty-in-bloom.yaml
+
+salon:
+  name: "[[Salon Name]]"
+  tagline: "[[One-line description]]"
+  ethos: "[[What makes them different]]"
+  address: "[[Full address + postcode]]"
+  phone_display: "[[Public phone number]]"
+  email: "[[Public email]]"
+  website: "[[URL]]"
+  instagram: "[[@handle]]"
+  online_booking: "[[Fresha / Phorest / Treatwell / Timely / none]]"
+  timezone: "Europe/London"
+  currency: "GBP"
+  owner_name: "[[First name]]"
+  owner_mobile: "[[+44... caller-ID greeting + alerts on demo day]]"
+  dev_alert_mobile: "[[Your own mobile, used for all SMS until demo day]]"
+
+opening_hours:            # 24h, closed = null
+  monday: null
+  tuesday: ["09:00", "17:30"]
+  wednesday: ["09:00", "17:30"]
+  thursday: ["09:00", "20:00"]
+  friday: ["09:00", "17:30"]
+  saturday: ["09:00", "16:00"]
+  sunday: null
+
+team:
+  - name: "[[Name]]"
+    role: "[[e.g. Owner & senior stylist]]"
+    bio: "[[One line from their website]]"
+    skills: ["hair"]        # hair | beauty | nails | bridal | holistic ...
+    works: ["tuesday", "wednesday", "thursday", "friday", "saturday"]
+
+# duration = minutes, price = GBP, from = price varies, who = team members who do it
+services:
+  - { name: "Cut & Blow-Dry", category: "hair", duration: 60, price: 45, who: ["[[Name]]"] }
+  - { name: "Full Head Colour", category: "colour", duration: 120, price: 75, from: true, patch_test: true, who: ["[[Name]]"] }
+  - { name: "Balayage", category: "colour", duration: 180, price: 130, from: true, patch_test: true, consultation_for_new_clients: true, who: ["[[Name]]"] }
+
+enquiry_only:             # high-value services the AI captures as leads, not bookings
+  - name: "Bridal Hair & Makeup"
+    details: "[[What to tell callers]]"
+    capture: [name, phone, email, wedding_date, venue_or_town, number_hair, number_makeup, trial_wanted, how_heard]
+
+coming_soon: []
+
+policies:
+  patch_test: "[[Their patch test policy]]"
+  cancellation: "[[Their cancellation policy]]"
+  deposit: "[[Their deposit policy; the AI never takes payment]]"
+  late_arrival: "[[Their late policy]]"
+
+faqs:
+  location: "[[How to find them]]"
+  parking: "[[Parking]]"
+  payment: "[[Payment methods]]"
+  gift_vouchers: "[[Vouchers]]"
+
+voice_and_tone: "[[e.g. Warm, upbeat, professional. British English.]]"
+
+receptionist_persona:
+  name: "[[e.g. Poppy]]"

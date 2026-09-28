@@ -1,0 +1,133 @@
+# Beauty in Bloom, Ilkley: demo config for the AI receptionist
+#
+# Sources: public web search results (salon site, Fresha listing, Yorkshire.com,
+# local press). See beauty-in-bloom-research.md for what is confirmed and what isn't.
+#
+# Legend:
+#   (no tag)   = found in public sources
+#   # VERIFY   = found, but only via a listing or summary; double-check
+#   # EST      = NOT found publicly; realistic placeholder. Replace from the
+#                salon's Fresha page before the demo. The owner WILL notice
+#                wrong prices.
+
+salon:
+  name: "Beauty in Bloom"
+  trading_as: "Beauty In Bloom by Charlotte Hawkins"
+  tagline: "An ethically minded hair and beauty salon in Ilkley"
+  ethos: "Eco-conscious luxury salon. Natural beauty through hair, beauty and makeup artistry. We plant trees, run product refill stations and use a hand-picked range of sustainable products."
+  established: "Brand since 2015; Ilkley salon opened April 2023"
+  address: "8 Cowpasture Road, Ilkley, LS29 8SR"
+  phone_display: "07754 430 839"
+  email: "charlotte@beautyinbloom.co.uk"
+  website: "https://beautyinbloom.co.uk"
+  instagram: "@beautyinbloom"
+  facebook: "BeautyinBloom1"
+  online_booking: "Fresha (search 'Beauty in Bloom Ilkley')"
+  google_rating: "5.0 stars"                  # VERIFY: count of reviews
+  timezone: "Europe/London"
+  currency: "GBP"
+  owner_name: "Charlotte"
+  owner_full_name: "Charlotte Hawkins"
+  # Caller-ID greeting + urgent alerts. During DEVELOPMENT set this to YOUR OWN
+  # mobile so test SMS never reach Charlotte. Switch on demo day only.
+  owner_mobile: "+447754430839"              # VERIFY: is this Charlotte's own mobile?
+  dev_alert_mobile: "[[James's mobile]]"
+
+opening_hours:            # 24h, closed = null. VERIFY: from Yorkshire.com listing
+  monday: null
+  tuesday: ["09:00", "18:00"]
+  wednesday: ["09:00", "18:00"]
+  thursday: ["09:00", "19:30"]
+  friday: ["09:00", "18:00"]
+  saturday: ["09:00", "17:00"]
+  sunday: null
+
+team:
+  - name: "Charlotte"
+    full_name: "Charlotte Hawkins"
+    role: "Owner, hairdresser, beauty therapist & nail technician"
+    bio: "Trained at London College of Fashion and Yorkshire College of Beauty Therapy, 15+ years' experience, specialises in bridal hair and makeup."
+    skills: ["hair", "beauty", "nails", "bridal"]
+    works: ["tuesday", "wednesday", "thursday", "friday", "saturday"]   # VERIFY
+  - name: "Tracey"
+    role: "Senior hairdresser"
+    bio: "30+ years' experience, keeps up with the latest cutting and colour trends."
+    skills: ["hair"]
+    works: ["tuesday", "wednesday", "thursday", "friday"]              # VERIFY
+  - name: "Katherine"
+    role: "Senior hairdresser & bridal stylist"
+    bio: "Professional since 2006, loves working with brides and bridal parties. Founded Beehive salon in Silsden (2011), which partners with Beauty in Bloom."
+    skills: ["hair", "bridal"]
+    works: ["thursday", "saturday"]                                     # VERIFY
+  - name: "Claire"
+    role: "Holistic therapist (Soul Sanctuary)"
+    bio: "Offers a wide range of holistic treatments at the salon."
+    skills: ["holistic"]
+    works: ["wednesday", "friday"]                                      # VERIFY
+
+# duration = minutes. price = GBP. from = price can vary, confirmed in salon.
+# who = team members who can do it.
+services:
+  # --- Hair (Charlotte, Tracey, Katherine) ---
+  - { name: "Free Hair Consultation", category: "hair", duration: 15, price: 0, who: [Charlotte, Tracey, Katherine] }
+  - { name: "Cut & Blow-Dry", category: "hair", duration: 60, price: 48, who: [Charlotte, Tracey, Katherine] }               # EST
+  - { name: "Restyle Cut & Blow-Dry", category: "hair", duration: 75, price: 55, who: [Charlotte, Tracey, Katherine] }       # EST
+  - { name: "Blow-Dry", category: "hair", duration: 45, price: 30, who: [Charlotte, Tracey, Katherine] }                    # EST
+  - { name: "Men's Cut", category: "hair", duration: 30, price: 25, who: [Tracey, Katherine] }                             # EST
+  - { name: "Occasion Hair / Up-do", category: "hair", duration: 60, price: 45, who: [Charlotte, Katherine] }               # EST
+  - { name: "Root Tint", category: "colour", duration: 90, price: 60, from: true, patch_test: true, who: [Charlotte, Tracey, Katherine] }            # EST
+  - { name: "Full Head Colour", category: "colour", duration: 120, price: 75, from: true, patch_test: true, who: [Charlotte, Tracey, Katherine] }     # EST
+  - { name: "Half Head Highlights", category: "colour", duration: 120, price: 80, from: true, patch_test: true, who: [Charlotte, Tracey, Katherine] } # EST
+  - { name: "Full Head Highlights", category: "colour", duration: 150, price: 100, from: true, patch_test: true, who: [Charlotte, Tracey, Katherine] } # EST
+  - { name: "Balayage", category: "colour", duration: 180, price: 130, from: true, patch_test: true, consultation_for_new_clients: true, who: [Charlotte, Tracey, Katherine] } # EST
+  - { name: "Conditioning Hair Treatment", category: "hair", duration: 30, price: 20, who: [Charlotte, Tracey, Katherine] } # EST
+
+  # --- Brows & lashes (Charlotte) ---
+  - { name: "Brow Shape", category: "brows_lashes", duration: 15, price: 15, who: [Charlotte] }                              # EST
+  - { name: "Brow Tint", category: "brows_lashes", duration: 15, price: 12, patch_test: true, who: [Charlotte] }            # EST
+  - { name: "Brow Lamination", category: "brows_lashes", duration: 45, price: 40, patch_test: true, who: [Charlotte] }      # EST
+  - { name: "Lash Tint", category: "brows_lashes", duration: 20, price: 15, patch_test: true, who: [Charlotte] }            # EST
+  - { name: "Lash Lift & Tint", category: "brows_lashes", duration: 60, price: 45, patch_test: true, who: [Charlotte] }     # EST
+  - { name: "Lash Extensions Full Set", category: "brows_lashes", duration: 90, price: 60, patch_test: true, who: [Charlotte] } # EST
+
+  # --- Beauty & nails (Charlotte) ---
+  - { name: "Gel Manicure", category: "nails", duration: 45, price: 28, who: [Charlotte] }                                   # EST
+  - { name: "Face Wax (lip or chin)", category: "beauty", duration: 15, price: 10, who: [Charlotte] }                       # EST
+  - { name: "Facial", category: "beauty", duration: 60, price: 55, who: [Charlotte] }                                       # EST
+  - { name: "Full Body Massage", category: "beauty", duration: 60, price: 55, who: [Charlotte] }                            # EST
+
+  # --- Holistic (Claire, Soul Sanctuary) ---
+  - { name: "Holistic Treatment with Claire", category: "holistic", duration: 60, price: 50, who: [Claire] }                # EST: get Claire's actual menu
+
+# NOT bookable by the AI: it captures an enquiry and alerts Charlotte instantly.
+enquiry_only:
+  - name: "Bridal Hair & Makeup"
+    details: "Bespoke bridal hair and makeup for the bride and bridal party. Trials take place in the salon's exclusive bridal suite in Ilkley. Prices include the stylist travelling to you on the wedding day within 25 miles of Ilkley; a small extra charge applies beyond that."
+    capture: [name, phone, email, wedding_date, venue_or_town, number_hair, number_makeup, trial_wanted, how_heard]
+
+coming_soon:
+  - name: "Semi-Permanent Makeup"
+    say: "That's coming soon! I can pop your details down and Charlotte will let you know as soon as it launches."
+
+policies:     # EST: ask Charlotte / copy from Fresha. These are sensible defaults.
+  patch_test: "For hair colour, brow or lash tints, lash lifts and lash extensions we need a quick free patch test at least 48 hours before, for new clients or if it's been more than 6 months. You can pop in for it any time we're open."
+  cancellation: "We kindly ask for 48 hours' notice to cancel or move an appointment, so we can offer the time to someone else."
+  deposit: "Some longer appointments need a small deposit. The salon will text you a secure link; I can't take card details over the phone."
+  late_arrival: "If you're running more than 15 minutes late we may need to shorten the treatment or rebook, so do give us a ring."
+
+faqs:
+  eco: "We're an ethically minded salon: we plant trees, have product refill stations so you can top up rather than buy new bottles, and use a hand-picked range of sustainable products."
+  location: "We're at 8 Cowpasture Road in Ilkley, LS29 8SR, a couple of minutes' walk from Ilkley train station."   # VERIFY walking time
+  parking: "There's pay-and-display parking in Ilkley town centre, just a short walk away."                          # VERIFY: any closer spot?
+  payment: "We take card and cash."                                                                                  # VERIFY
+  bridal: "Bridal hair and makeup is Charlotte's speciality. She'll want to chat through your day personally, so I'll take a few details and she'll call you back."
+  beehive: "Katherine also founded Beehive, a hair and beauty salon in Silsden. For Beehive bookings I can take a message for the team."   # VERIFY how the partnership works
+  gift_vouchers: "[[VERIFY: do they sell vouchers? Where?]]"
+  online_booking: "You can also book online any time through Fresha, just search Beauty in Bloom Ilkley."
+
+voice_and_tone: >
+  Calm, warm and quietly luxurious, like a friendly receptionist at a boutique eco salon
+  in Ilkley. Genuinely caring, never pushy or salesy. British English. Short and natural.
+
+receptionist_persona:
+  name: "Poppy"     # flower name to match the "Bloom" brand; easy to change
