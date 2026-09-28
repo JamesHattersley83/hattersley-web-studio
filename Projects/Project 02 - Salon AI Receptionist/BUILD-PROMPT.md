@@ -1,6 +1,6 @@
 # Build Prompt: AI Receptionist Demo for Beauty in Bloom, Ilkley
 
-> **How to use:** Section 2 is already filled in for **Beauty in Bloom, Ilkley** (from `salons/beauty-in-bloom.yaml`). Before the demo, replace every `# EST` line with real prices and durations from the salon's Fresha page. Then paste this whole file into Claude Code, or whichever AI coding tool you use, from an empty project folder. The prompt is written so the tool builds in phases and stops for you to check each one. For a different salon, start from `salons/_template.yaml`.
+> **How to use:** Section 2 is already filled in for **Beauty in Bloom, Ilkley** (from `salons/beauty-in-bloom.yaml`), with real prices from the salon's website. Before the demo, check the estimated treatment durations and who does what against Fresha. Then paste this whole file into Claude Code, or whichever AI coding tool you use, from an empty project folder. The prompt is written so the tool builds in phases and stops for you to check each one. For a different salon, start from `salons/_template.yaml`.
 
 ---
 
@@ -29,7 +29,7 @@ Charlotte rings a real phone number from her own mobile. "Poppy", the AI recepti
 
 ## 2. Salon details: Beauty in Bloom, Ilkley (everything the AI says comes from here)
 
-Lines marked `# EST` are placeholders I could not find publicly. Tell me when you reach Phase 1 so I can replace them with real prices from the salon's Fresha page. Lines marked `# VERIFY` need a double-check. Put this in `config/salon.yaml`.
+All prices below are copied from the salon's own website. Treatment **durations** are estimates (`# EST`), and lines marked `# VERIFY` need a double-check. When you reach Phase 1, remind me to confirm durations and who does what against Fresha. Put this in `config/salon.yaml`.
 
 ```yaml
 # Beauty in Bloom, Ilkley: demo config for the AI receptionist
@@ -37,12 +37,15 @@ Lines marked `# EST` are placeholders I could not find publicly. Tell me when yo
 # Sources: public web search results (salon site, Fresha listing, Yorkshire.com,
 # local press). See beauty-in-bloom-research.md for what is confirmed and what isn't.
 #
+# PRICES: copied from the salon's own Treatments and Weddings pages
+# (beautyinbloom.co.uk), from screenshots taken 28 Sep 2026. The site shows
+# "Senior Stylist" / "Senior Therapist" prices.
+#
 # Legend:
-#   (no tag)   = found in public sources
+#   (no tag)   = confirmed from the salon's website or public sources
 #   # VERIFY   = found, but only via a listing or summary; double-check
-#   # EST      = NOT found publicly; realistic placeholder. Replace from the
-#                salon's Fresha page before the demo. The owner WILL notice
-#                wrong prices.
+#   # EST      = NOT published; realistic placeholder. Treatment DURATIONS are
+#                all estimates: check them against Fresha before the demo.
 
 salon:
   name: "Beauty in Bloom"
@@ -56,7 +59,8 @@ salon:
   website: "https://beautyinbloom.co.uk"
   instagram: "@beautyinbloom"
   facebook: "BeautyinBloom1"
-  online_booking: "Fresha (search 'Beauty in Bloom Ilkley')"
+  online_booking: "Fresha (search 'Beauty in Bloom Ilkley'). The website also says 'Get in touch to book'."
+  online_shop: true
   google_rating: "5.0 stars"                  # VERIFY: count of reviews
   timezone: "Europe/London"
   currency: "GBP"
@@ -95,48 +99,101 @@ team:
     works: ["thursday", "saturday"]                                     # VERIFY
   - name: "Claire"
     role: "Holistic therapist (Soul Sanctuary)"
-    bio: "Offers a wide range of holistic treatments at the salon."
+    bio: "Offers a wide range of holistic treatments at the salon through her business, Soul Sanctuary."
     skills: ["holistic"]
-    works: ["wednesday", "friday"]                                      # VERIFY
+    in_salon_diary: false     # books separately via Soul Sanctuary. VERIFY how
+  - name: "Ellen"
+    role: "Facialist"
+    bio: "Offers facials at the salon; details on her Instagram page."
+    skills: ["facials"]
+    in_salon_diary: false     # books separately. VERIFY how, and get her Instagram handle
 
-# duration = minutes. price = GBP. from = price can vary, confirmed in salon.
-# who = team members who can do it.
+# price = GBP as published. duration = minutes (ALL ESTIMATED: check Fresha).
+# from = published as a 'from' price. addon = extra on top of a main service,
+# never booked alone. who = team members who do it (VERIFY who does what).
 services:
-  # --- Hair (Charlotte, Tracey, Katherine) ---
-  - { name: "Free Hair Consultation", category: "hair", duration: 15, price: 0, who: [Charlotte, Tracey, Katherine] }
-  - { name: "Cut & Blow-Dry", category: "hair", duration: 60, price: 48, who: [Charlotte, Tracey, Katherine] }               # EST
-  - { name: "Restyle Cut & Blow-Dry", category: "hair", duration: 75, price: 55, who: [Charlotte, Tracey, Katherine] }       # EST
-  - { name: "Blow-Dry", category: "hair", duration: 45, price: 30, who: [Charlotte, Tracey, Katherine] }                    # EST
-  - { name: "Men's Cut", category: "hair", duration: 30, price: 25, who: [Tracey, Katherine] }                             # EST
-  - { name: "Occasion Hair / Up-do", category: "hair", duration: 60, price: 45, who: [Charlotte, Katherine] }               # EST
-  - { name: "Root Tint", category: "colour", duration: 90, price: 60, from: true, patch_test: true, who: [Charlotte, Tracey, Katherine] }            # EST
-  - { name: "Full Head Colour", category: "colour", duration: 120, price: 75, from: true, patch_test: true, who: [Charlotte, Tracey, Katherine] }     # EST
-  - { name: "Half Head Highlights", category: "colour", duration: 120, price: 80, from: true, patch_test: true, who: [Charlotte, Tracey, Katherine] } # EST
-  - { name: "Full Head Highlights", category: "colour", duration: 150, price: 100, from: true, patch_test: true, who: [Charlotte, Tracey, Katherine] } # EST
-  - { name: "Balayage", category: "colour", duration: 180, price: 130, from: true, patch_test: true, consultation_for_new_clients: true, who: [Charlotte, Tracey, Katherine] } # EST
-  - { name: "Conditioning Hair Treatment", category: "hair", duration: 30, price: 20, who: [Charlotte, Tracey, Katherine] } # EST
+  # --- Hair: cut & blow-dry (Senior Stylist prices) ---
+  - { name: "Blow-Dry", category: "hair", duration: 45, price: 28, who: [Charlotte, Tracey, Katherine] }
+  - { name: "Cut & Blow-Dry", category: "hair", duration: 60, price: 50, who: [Charlotte, Tracey, Katherine] }
+  - { name: "Dry Trim", category: "hair", duration: 30, price: 25, who: [Charlotte, Tracey, Katherine] }
+  - { name: "Men's Cut", category: "hair", duration: 30, price: 25, who: [Charlotte, Tracey, Katherine] }
+  - { name: "Children's Cut", category: "hair", duration: 30, price: 12, from: true, who: [Charlotte, Tracey, Katherine] }
 
-  # --- Brows & lashes (Charlotte) ---
-  - { name: "Brow Shape", category: "brows_lashes", duration: 15, price: 15, who: [Charlotte] }                              # EST
-  - { name: "Brow Tint", category: "brows_lashes", duration: 15, price: 12, patch_test: true, who: [Charlotte] }            # EST
-  - { name: "Brow Lamination", category: "brows_lashes", duration: 45, price: 40, patch_test: true, who: [Charlotte] }      # EST
-  - { name: "Lash Tint", category: "brows_lashes", duration: 20, price: 15, patch_test: true, who: [Charlotte] }            # EST
-  - { name: "Lash Lift & Tint", category: "brows_lashes", duration: 60, price: 45, patch_test: true, who: [Charlotte] }     # EST
-  - { name: "Lash Extensions Full Set", category: "brows_lashes", duration: 90, price: 60, patch_test: true, who: [Charlotte] } # EST
+  # --- Hair: colouring (Senior Stylist prices) ---
+  - { name: "Crown & Parting", category: "colour", duration: 75, price: 51, patch_test: true, who: [Charlotte, Tracey, Katherine] }
+  - { name: "Half Head Foils", category: "colour", duration: 120, price: 62, patch_test: true, who: [Charlotte, Tracey, Katherine] }
+  - { name: "Full Head Foils", category: "colour", duration: 150, price: 80, patch_test: true, who: [Charlotte, Tracey, Katherine] }
+  - { name: "Root Retouch", category: "colour", duration: 90, price: 50, patch_test: true, who: [Charlotte, Tracey, Katherine] }
+  - { name: "Full Head Colour", category: "colour", duration: 120, price: 68, patch_test: true, who: [Charlotte, Tracey, Katherine] }
+  - { name: "Balayage", category: "colour", duration: 180, price: 88, patch_test: true, consultation_for_new_clients: true, who: [Charlotte, Tracey, Katherine] }
+  - { name: "In-Salon Hair Treatment", category: "hair", duration: 30, price: 18, from: true, who: [Charlotte, Tracey, Katherine] }
+  - { name: "Colour Refresh", category: "addon", duration: 15, price: 20, addon: true, addon_to: "colour", who: [Charlotte, Tracey, Katherine] }
+  - { name: "Toner", category: "addon", duration: 20, price: 17.50, addon: true, addon_to: "colour", who: [Charlotte, Tracey, Katherine] }
+  - { name: "Additional Foils", category: "addon", duration: 15, price: 25, addon: true, addon_to: "colour", who: [Charlotte, Tracey, Katherine] }
+  # Consultation: NOT on the published menu. Keep only if the salon offers one.  # VERIFY
+  - { name: "Free Colour Consultation", category: "hair", duration: 15, price: 0, who: [Charlotte, Tracey, Katherine] }
 
-  # --- Beauty & nails (Charlotte) ---
-  - { name: "Gel Manicure", category: "nails", duration: 45, price: 28, who: [Charlotte] }                                   # EST
-  - { name: "Face Wax (lip or chin)", category: "beauty", duration: 15, price: 10, who: [Charlotte] }                       # EST
-  - { name: "Facial", category: "beauty", duration: 60, price: 55, who: [Charlotte] }                                       # EST
-  - { name: "Full Body Massage", category: "beauty", duration: 60, price: 55, who: [Charlotte] }                            # EST
+  # --- Brows & lashes (Senior Therapist prices) ---
+  - { name: "Eyebrow Wax", category: "brows_lashes", duration: 15, price: 15, who: [Charlotte] }
+  - { name: "Eyebrow Tint", category: "brows_lashes", duration: 15, price: 15, patch_test: true, who: [Charlotte] }
+  - { name: "Eyebrow Wax & Tint", category: "brows_lashes", duration: 30, price: 27, patch_test: true, who: [Charlotte] }
+  - { name: "HD Brows", category: "brows_lashes", duration: 45, price: 30, patch_test: true, who: [Charlotte] }
+  - { name: "Henna Brows including Wax", category: "brows_lashes", duration: 45, price: 38, patch_test: true, who: [Charlotte] }
+  - { name: "Lash Tint", category: "brows_lashes", duration: 20, price: 23, patch_test: true, who: [Charlotte] }
+  - { name: "Lash Lift & Tint", category: "brows_lashes", duration: 60, price: 50, patch_test: true, who: [Charlotte] }
+  - { name: "Brow Lamination with Wax & Tint", category: "brows_lashes", duration: 60, price: 47, patch_test: true, who: [Charlotte] }
+  - { name: "Classic Lash Extensions", category: "brows_lashes", duration: 90, price: 40, patch_test: true, who: [Charlotte] }
+  - { name: "Hybrid Lash Extensions", category: "brows_lashes", duration: 105, price: 45, patch_test: true, who: [Charlotte] }
+  - { name: "Lash Infill", category: "brows_lashes", duration: 45, price: 28, patch_test: true, who: [Charlotte] }
 
-  # --- Holistic (Claire, Soul Sanctuary) ---
-  - { name: "Holistic Treatment with Claire", category: "holistic", duration: 60, price: 50, who: [Claire] }                # EST: get Claire's actual menu
+  # --- Waxing ---
+  - { name: "Lip Wax", category: "waxing", duration: 10, price: 10, who: [Charlotte] }
+  - { name: "Chin Wax", category: "waxing", duration: 10, price: 10, who: [Charlotte] }
+  - { name: "Lip & Chin Wax", category: "waxing", duration: 15, price: 17, who: [Charlotte] }
+  - { name: "Bikini Wax", category: "waxing", duration: 20, price: 22, from: true, who: [Charlotte] }
+  - { name: "Half Leg Wax", category: "waxing", duration: 30, price: 25, who: [Charlotte] }
+  - { name: "Full Leg Wax", category: "waxing", duration: 45, price: 37, who: [Charlotte] }
+  - { name: "Underarm Wax", category: "waxing", duration: 15, price: 15, who: [Charlotte] }
+
+  # --- Nails (Senior Stylist prices) ---
+  - { name: "Gel Polish Manicure (removal included)", category: "nails", duration: 45, price: 36, who: [Charlotte] }
+  - { name: "Gel Polish Pedicure (removal included)", category: "nails", duration: 60, price: 36, who: [Charlotte] }
+  - { name: "File & Polish Manicure (regular polish)", category: "nails", duration: 30, price: 28, who: [Charlotte] }
+  - { name: "Luxury Manicure", category: "nails", duration: 60, price: 45, who: [Charlotte] }
+  - { name: "Luxury Pedicure", category: "nails", duration: 60, price: 45, who: [Charlotte] }
+  - { name: "Builder Gel (BIAB) with Gel Manicure", category: "nails", duration: 60, price: 38, who: [Charlotte] }
+  - { name: "Builder Gel (BIAB) Overlay Manicure", category: "nails", duration: 60, price: 35, who: [Charlotte] }
+  - { name: "Builder Gel (BIAB) Infill (within 2 weeks only)", category: "nails", duration: 60, price: 28, who: [Charlotte] }
+  - { name: "Nail Art", category: "addon", duration: 15, price: 6, from: true, addon: true, addon_to: "nails", who: [Charlotte] }
+
+# Offered at the salon by independent practitioners who take their own bookings.
+# Poppy explains and offers to pass on the caller's details. She never books these.
+referred:
+  - name: "Facials"
+    practitioner: "Ellen"
+    say: "Facials are with Ellen here at the salon. She manages her own bookings, and you can find out more on her Instagram. I'm happy to pass your details on so she can get in touch."
+  - name: "Holistic treatments"
+    practitioner: "Claire, Soul Sanctuary"
+    say: "We have a wide range of holistic treatments with Claire from Soul Sanctuary. She takes her own bookings, but I can pass your details on so she can get in touch."
 
 # NOT bookable by the AI: it captures an enquiry and alerts Charlotte instantly.
+# Poppy MAY quote these published prices if asked; packages are bespoke.
 enquiry_only:
   - name: "Bridal Hair & Makeup"
     details: "Bespoke bridal hair and makeup for the bride and bridal party. Trials take place in the salon's exclusive bridal suite in Ilkley. Prices include the stylist travelling to you on the wedding day within 25 miles of Ilkley; a small extra charge applies beyond that."
+    prices:
+      the_bride:
+        - { name: "Bridal Hair", price: 170 }
+        - { name: "Bridal Make Up", price: 170 }
+        - { name: "Bridal Hair or Make Up Trial", price: 100, unit: "per person, per trial" }
+        - { name: "Bridal Hair & Make Up Packages", price: null, note: "Bespoke; Charlotte will put a package together" }
+      the_bridal_party:   # bridesmaids, Mother of the Bride, Mother of the Groom, other friends or family
+        - { name: "Bridal Party Hair", price: 80, unit: "per person" }
+        - { name: "Bridal Party Make Up", price: 80, unit: "per person" }
+        - { name: "Bridal Party Hair & Make Up", price: 150, unit: "per person" }
+        - { name: "Bridesmaids (16 and under) Hair", price: 55, unit: "per person" }
+        - { name: "Bridesmaids (5 and under) Hair", price: 30, unit: "per person" }
+        - { name: "Additional Trials", price: 75, unit: "per person, per trial" }
     capture: [name, phone, email, wedding_date, venue_or_town, number_hair, number_makeup, trial_wanted, how_heard]
 
 coming_soon:
@@ -144,7 +201,7 @@ coming_soon:
     say: "That's coming soon! I can pop your details down and Charlotte will let you know as soon as it launches."
 
 policies:     # EST: ask Charlotte / copy from Fresha. These are sensible defaults.
-  patch_test: "For hair colour, brow or lash tints, lash lifts and lash extensions we need a quick free patch test at least 48 hours before, for new clients or if it's been more than 6 months. You can pop in for it any time we're open."
+  patch_test: "For hair colour, brow or lash tints, HD or henna brows, lamination, lash lifts and lash extensions we need a quick free patch test at least 48 hours before, for new clients or if it's been more than 6 months. You can pop in for it any time we're open."
   cancellation: "We kindly ask for 48 hours' notice to cancel or move an appointment, so we can offer the time to someone else."
   deposit: "Some longer appointments need a small deposit. The salon will text you a secure link; I can't take card details over the phone."
   late_arrival: "If you're running more than 15 minutes late we may need to shorten the treatment or rebook, so do give us a ring."
@@ -154,7 +211,9 @@ faqs:
   location: "We're at 8 Cowpasture Road in Ilkley, LS29 8SR, a couple of minutes' walk from Ilkley train station."   # VERIFY walking time
   parking: "There's pay-and-display parking in Ilkley town centre, just a short walk away."                          # VERIFY: any closer spot?
   payment: "We take card and cash."                                                                                  # VERIFY
-  bridal: "Bridal hair and makeup is Charlotte's speciality. She'll want to chat through your day personally, so I'll take a few details and she'll call you back."
+  bridal: "Bridal hair and makeup is Charlotte's speciality. Bridal hair or bridal makeup is a hundred and seventy pounds each, and bridal party hair or makeup is eighty pounds per person. Charlotte puts together bespoke packages, so I'll take a few details and she'll call you back personally."
+  colour_addons: "Toner, a colour refresh or extra foils are added on if your stylist recommends them, so they'll confirm the final price with you."
+  shop: "You can shop our products online through the website, as well as refilling in the salon."
   beehive: "Katherine also founded Beehive, a hair and beauty salon in Silsden. For Beehive bookings I can take a message for the team."   # VERIFY how the partnership works
   gift_vouchers: "[[VERIFY: do they sell vouchers? Where?]]"
   online_booking: "You can also book online any time through Fresha, just search Beauty in Bloom Ilkley."
@@ -207,15 +266,16 @@ Create migrations plus a seed script that loads Section 2's YAML. Store all time
 
 | Table | Key columns |
 |---|---|
-| `team_members` | id, name, role, bio, skills (text[]), working_days (text[]), active |
+| `team_members` | id, name, role, bio, skills (text[]), working_days (text[]), in_salon_diary (bool), active |
 | `team_member_services` | team_member_id, service_id (from each service's `who` list) |
-| `services` | id, name, category (`hair`/`colour`/`brows_lashes`/`nails`/`beauty`/`holistic`), duration_min, price, price_is_from (bool), requires_patch_test, requires_consultation_for_new_clients |
+| `services` | id, name, category (`hair`/`colour`/`brows_lashes`/`waxing`/`nails`/`addon`), duration_min, price (numeric, allows £17.50), price_is_from (bool), is_addon (bool), addon_to (category), requires_patch_test, requires_consultation_for_new_clients |
+| `appointment_addons` | appointment_id, service_id (add-ons such as Toner or Nail Art extend the appointment's duration and price) |
 | `opening_hours` | weekday (0–6), opens, closes (null = closed) |
 | `closures` | date, reason (bank holidays, training days) |
 | `clients` | id, first_name, last_name, phone_e164 (unique), email, is_new, patch_test_at, notes, created_at |
 | `appointments` | id, client_id, team_member_id, service_id, starts_at, ends_at, status (`booked`/`cancelled`/`completed`/`no_show`), source (`phone_ai`/`web_ai`/`manual`), price_quoted, notes, created_at |
 | `messages` | id, client_name, phone, reason, urgency (`normal`/`urgent`), status (`new`/`handled`), created_at |
-| `enquiries` | id, type (`bridal`/`coming_soon`), name, phone, email, wedding_date, venue_or_town, number_hair, number_makeup, trial_wanted, how_heard, notes, status (`new`/`contacted`/`booked`/`lost`), created_at |
+| `enquiries` | id, type (`bridal`/`coming_soon`/`referral`), practitioner (for referrals, e.g. Ellen or Claire), name, phone, email, wedding_date, venue_or_town, number_hair, number_makeup, trial_wanted, how_heard, notes, status (`new`/`contacted`/`booked`/`lost`), created_at |
 | `calls` | id, vapi_call_id, caller_phone, started_at, ended_at, duration_s, outcome (`booked`/`rescheduled`/`cancelled`/`bridal_enquiry`/`faq`/`message`/`transferred`/`abandoned`), summary, transcript, recording_url, cost |
 
 **Seed data for a convincing demo:**
@@ -232,7 +292,8 @@ Create migrations plus a seed script that loads Section 2's YAML. Store all time
 2. The service must **finish** by closing time.
 3. 15-minute slot grid. 10-minute buffer after colour and lash-extension services, none after others.
 4. No overlap with any `booked` appointment for that team member.
-5. A team member can only do services they're linked to in `team_member_services` (for example, only Charlotte does brows, lashes, nails and beauty; only Claire does holistic).
+5. A team member can only do services they're linked to in `team_member_services` (for example, only Charlotte does brows, lashes, waxing and nails). Team members with `in_salon_diary: false` (Ellen, Claire) are never offered slots.
+5b. Add-ons (`is_addon`) are never booked on their own. They attach to a main service in the same category group and add their duration and price.
 6. "Anyone's fine" = search all eligible team members and return the earliest options, spread across different days and times.
 7. Minimum notice: 2 hours from now. Maximum: 8 weeks ahead.
 8. **Patch test:** for any service with `patch_test: true` (hair colour, brow or lash tint, lamination, lash lift, lash extensions), if the client is new or `patch_test_at` is over 6 months old, the appointment must be at least 48 hours away. The tool flags `patch_test_needed: true` so the AI can explain it.
@@ -251,12 +312,12 @@ Expose these to Vapi as function tools, all handled by `/api/vapi/tools`. Valida
 |---|---|---|
 | `get_services` | `category?` | list of `{name, duration_label, price_label}`, e.g. "from £75" |
 | `check_availability` | `service_name`, `team_member_name?` ("any" allowed), `preferred_date?` (natural language OK: "next Saturday", "Friday afternoon"), `time_of_day?` (`morning`/`afternoon`/`evening`) | up to 3 `{slot_id, team_member, spoken_label, price_label}` + `patch_test_needed`, `consultation_recommended` |
-| `book_appointment` | `slot_id`, `first_name`, `last_name`, `phone`, `notes?` | `{confirmed, spoken_summary, appointment_ref}` or `{error, alternatives}` |
+| `book_appointment` | `slot_id`, `first_name`, `last_name`, `phone`, `addons?` (e.g. ["Toner"]), `notes?` | `{confirmed, spoken_summary, appointment_ref}` or `{error, alternatives}` |
 | `find_client_appointments` | `phone` | upcoming appointments with `spoken_label`s |
 | `reschedule_appointment` | `appointment_ref`, `new_slot_id` | `{confirmed, spoken_summary}` |
 | `cancel_appointment` | `appointment_ref`, `reason?` | `{cancelled, late_cancellation: bool, policy_note}` |
 | `answer_faq` | `topic` | the approved answer text from Section 2, or `{unknown: true}` |
-| `log_enquiry` | `type` (`bridal`/`coming_soon`), `name`, `phone`, `email?`, `wedding_date?`, `venue_or_town?`, `number_hair?`, `number_makeup?`, `trial_wanted?`, `how_heard?`, `notes?` | `{saved, spoken_confirmation}`. Bridal enquiries trigger an instant SMS to Charlotte via n8n |
+| `log_enquiry` | `type` (`bridal`/`coming_soon`/`referral`), `practitioner?`, `name`, `phone`, `email?`, `wedding_date?`, `venue_or_town?`, `number_hair?`, `number_makeup?`, `trial_wanted?`, `how_heard?`, `notes?` | `{saved, spoken_confirmation}`. Bridal enquiries trigger an instant SMS to Charlotte via n8n |
 | `take_message` | `name`, `phone`, `reason`, `urgency` | `{saved, spoken_confirmation}`. Urgent messages trigger an owner SMS via n8n |
 | `transfer_to_human` | `reason` | Vapi transfer to the salon number, **only during opening hours**. Otherwise tells the AI to take a message |
 
@@ -314,7 +375,10 @@ capture bridal enquiries for Charlotte, and take messages. You make the salon fe
 
 ## Bridal enquiries (Charlotte's speciality; highest-value calls)
 - Be warm and excited for them. Congratulate them!
-- Don't quote bridal prices or promise availability. Charlotte personally handles every bride.
+- Never promise availability for a wedding date. Charlotte personally handles every bride.
+- If asked, you may quote the published bridal prices from the salon information
+  (e.g. bridal hair is a hundred and seventy pounds, bridal party hair and makeup is a
+  hundred and fifty pounds per person). Packages are bespoke: Charlotte will put one together.
 - Collect, one question at a time: name, wedding date, venue or town, how many people
   need hair and how many need makeup, whether they'd like a trial, best mobile, and
   optionally email and how they heard about the salon.
@@ -323,6 +387,9 @@ capture bridal enquiries for Charlotte, and take messages. You make the salon fe
 - Call log_enquiry with type bridal, then say Charlotte will call them back personally.
 
 ## Other services
+- Facials are with Ellen, and holistic treatments are with Claire from Soul Sanctuary. Both
+  take their own bookings: explain this warmly and offer to pass on the caller's details
+  (log_enquiry, type referral, with the practitioner's name). Never book these yourself.
 - Semi-permanent makeup is coming soon: offer to note their interest (log_enquiry, type
   coming_soon).
 - If asked about the eco ethos, share it proudly: tree planting, refill stations,
@@ -332,8 +399,10 @@ capture bridal enquiries for Charlotte, and take messages. You make the salon fe
 - NEVER invent availability, prices, team members, services or policies. Only use tool results
   and the salon info below. If you don't know, say so and offer to take a message.
 - NEVER say an appointment is booked unless book_appointment returned confirmed: true.
-- Colour prices are "from" prices: say "from seventy-five pounds, and your stylist will
-  confirm at your appointment".
+- Quote prices exactly as listed (these are senior stylist and senior therapist prices).
+  For colour, add: "if you need a toner or extra foils, your stylist will confirm that
+  with you." Say "from" only for services marked from (children's cuts, bikini wax,
+  hair treatments, nail art).
 - Do not give medical, allergy or scalp-condition advice. If someone mentions a reaction,
   burn, allergy or anything health-related: be caring, recommend they speak to a
   pharmacist or GP if it's urgent, and take an URGENT message for the owner.
@@ -361,7 +430,7 @@ Before ending, check "Is there anything else I can help with?" Then close warmly
 - `firstMessage` set from the opening above.
 - Background sound off.
 - Silence timeout of 20 seconds, max call duration of 10 minutes.
-- Keyterm boosting in the speech-to-text for team names (Charlotte, Tracey, Katherine, Claire), service names ("balayage", "lamination", "lash lift"), place names (Ilkley, Cowpasture Road, Silsden, Beehive) and "Beauty in Bloom".
+- Keyterm boosting in the speech-to-text for team names (Charlotte, Tracey, Katherine, Claire, Ellen), service names ("balayage", "foils", "toner", "lamination", "HD brows", "henna brows", "lash lift", "hybrid lashes", "BIAB", "builder gel"), "Soul Sanctuary", place names (Ilkley, Cowpasture Road, Silsden, Beehive) and "Beauty in Bloom".
 - End-of-call analysis: generate a 2-sentence `summary` and a structured `outcome` that matches the `calls.outcome` enum.
 - Call-recording disclosure in the first message if recording is on (UK GDPR).
 
@@ -389,7 +458,7 @@ One page, mobile-friendly, looks premium: soft botanical, eco-luxury aesthetic t
 
 - **Top KPIs (today, and the last 7 days):** calls answered by AI, bookings made, £ value booked, bridal enquiries captured, after-hours calls caught, average call length.
 - **Live feed:** newest calls first, showing outcome badge, caller, 2-line summary and an expandable transcript with a recording player.
-- **Today's diary:** a simple column per team member (Charlotte, Tracey, Katherine, Claire) showing appointments, with AI-made bookings highlighted.
+- **Today's diary:** a simple column per team member (Charlotte, Tracey, Katherine) showing appointments, with AI-made bookings highlighted.
 - **Bridal enquiries:** cards showing wedding date, venue, party size and status, sorted by wedding date.
 - **Messages:** list with urgent ones pinned, plus a "mark handled" button.
 - A small **"New booking!" toast with a sound** when an AI booking lands. This is what the owner sees during the demo.
@@ -416,19 +485,21 @@ One page, mobile-friendly, looks premium: soft botanical, eco-luxury aesthetic t
 |---|---|---|
 | 1 | Charlotte's number calls, "Can I book a cut and blow-dry with Tracey on Thursday?" | Greeted by name, offered ≤3 real slots, books, SMS arrives, dashboard updates in under 5 seconds |
 | 2 | New client: "I'd like balayage next Tuesday" | Patch test explained, consultation offered, 48-hour rule respected |
-| 3 | "I'm getting married next June and I'd love you to do my hair and makeup" | Congratulates, no price quoted, captures all bridal fields one at a time, Charlotte gets the bridal SMS, enquiry card appears on dashboard |
+| 3 | "I'm getting married next June and I'd love you to do my hair and makeup" | Congratulates, quotes only published prices if asked (bridal hair £170), captures all bridal fields one at a time, Charlotte gets the bridal SMS, enquiry card appears on dashboard |
 | 4 | "Can I get a lash lift tomorrow?" (new client) | Explains the patch test, offers slots 48 hours or more out |
 | 5 | "Anyone's fine, whenever's soonest for a cut and blow-dry" | Earliest options across Charlotte, Tracey and Katherine |
 | 6 | "I need to move my appointment" | Finds by caller ID, offers new times, reschedules, SMS sent |
 | 7 | Cancel within 24 hours | Cancels and mentions the cancellation policy kindly |
-| 8 | "How much is a full head colour?" / "Where do I park?" / "What's the eco thing you do?" | Correct "from" price / correct FAQ answers, word for word from the data |
-| 9 | "Do you do semi-permanent makeup?" | Says it's coming soon, offers to note interest, logs a coming_soon enquiry |
-| 10 | "Do you do spray tans?" (not on the menu) | Says no honestly, and doesn't invent anything |
-| 11 | "My brows have been stinging since my tint yesterday" | Caring response, no medical advice, urgent message, owner SMS |
-| 12 | Call at 9pm, "Can I speak to Charlotte?" | Explains the salon is closed, takes a message, gives reopening time |
-| 13 | Caller interrupts mid-sentence and changes their mind | AI stops, adapts, doesn't double-book |
-| 14 | Requested slot gets taken between offer and confirmation | Graceful apology plus fresh alternatives |
-| 15 | "Are you a robot?" | Honest yes, stays friendly, carries on helping |
+| 8 | "How much is a full head colour?" / "Where do I park?" / "What's the eco thing you do?" | "Sixty-eight pounds", plus the toner/foils note / correct FAQ answers, word for word from the data |
+| 9 | "Can I book a facial?" | Explains facials are with Ellen, who takes her own bookings; offers to pass details on; logs a referral; doesn't book |
+| 10 | "BIAB and some nail art on Friday please" | Books BIAB with the Nail Art add-on; quotes thirty-eight pounds plus nail art from six pounds |
+| 11 | "Do you do semi-permanent makeup?" | Says it's coming soon, offers to note interest, logs a coming_soon enquiry |
+| 12 | "Do you do spray tans?" (not on the menu) | Says no honestly, and doesn't invent anything |
+| 13 | "My brows have been stinging since my tint yesterday" | Caring response, no medical advice, urgent message, owner SMS |
+| 14 | Call at 9pm, "Can I speak to Charlotte?" | Explains the salon is closed, takes a message, gives reopening time |
+| 15 | Caller interrupts mid-sentence and changes their mind | AI stops, adapts, doesn't double-book |
+| 16 | Requested slot gets taken between offer and confirmation | Graceful apology plus fresh alternatives |
+| 17 | "Are you a robot?" | Honest yes, stays friendly, carries on helping |
 
 ---
 
