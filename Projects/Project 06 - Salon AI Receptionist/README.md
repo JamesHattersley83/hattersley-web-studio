@@ -16,6 +16,7 @@ Stylists have their hands in someone's hair when the phone rings. Salons miss a 
 | [`salons/beauty-in-bloom.yaml`](./salons/beauty-in-bloom.yaml) | Beauty in Bloom's config: team, services, prices (from their website), hours, policies and FAQs. Check the `# EST` durations before the demo. |
 | [`salons/beauty-in-bloom-research.md`](./salons/beauty-in-bloom-research.md) | What's confirmed, what still needs checking, pitch angles and sources. |
 | [`salons/_template.yaml`](./salons/_template.yaml) | Blank config for the next salon prospect. |
+| [`dashboard-mockup.html`](./dashboard-mockup.html) | Clickable mockup of the owner dashboard with example data. Give it to Claude Code as the design reference for Phase 6. |
 
 ## Stack
 

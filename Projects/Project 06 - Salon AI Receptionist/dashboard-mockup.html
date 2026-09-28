@@ -1,0 +1,481 @@
+<title>Poppy Owner Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600&family=Lato:wght@300;400;700&display=swap">
+<style>
+/* Layout: salon-owner console. Summary tiles, then the live call feed beside
+   enquiries and messages, then today's diary and the week's calls. Brand-matched
+   to beautyinbloom.co.uk: warm stone ground, blush serif caps, Lato body. */
+:root {
+  --bg: #f5f1ed;
+  --surface: #fffdfb;
+  --surface-2: #faf5f2;
+  --ink: #3b3235;
+  --ink-2: #6b5f63;
+  --muted: #968a8e;
+  --line: #e8dfdb;
+  --accent: #b0587a;
+  --accent-soft: #f7e3ea;
+  --bar: #dca0b5;
+  --sage: #5f7f63;
+  --sage-soft: #e5ede4;
+  --good: #357a4b;
+  --good-soft: #e1f0e5;
+  --warn: #9a6512;
+  --warn-soft: #f8ecd6;
+  --crit: #b3261e;
+  --crit-soft: #fbe3e0;
+  --shadow: 0 1px 2px rgba(59, 50, 53, .06), 0 4px 16px rgba(59, 50, 53, .05);
+  --display: "Lora", Georgia, "Times New Roman", serif;
+  --body: "Lato", "Helvetica Neue", Arial, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #1c1719; --surface: #262023; --surface-2: #2d2629; --ink: #f3ecee; --ink-2: #cdbfc4;
+    --muted: #9b8d92; --line: #3d3437; --accent: #eba5bd; --accent-soft: #452f39; --bar: #b9738c;
+    --sage: #9cbf9f; --sage-soft: #2c3a2e; --good: #83c79a; --good-soft: #213528; --warn: #e6b664;
+    --warn-soft: #3d3020; --crit: #f28b80; --crit-soft: #452522; --shadow: 0 1px 2px rgba(0,0,0,.3);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #1c1719; --surface: #262023; --surface-2: #2d2629; --ink: #f3ecee; --ink-2: #cdbfc4;
+  --muted: #9b8d92; --line: #3d3437; --accent: #eba5bd; --accent-soft: #452f39; --bar: #b9738c;
+  --sage: #9cbf9f; --sage-soft: #2c3a2e; --good: #83c79a; --good-soft: #213528; --warn: #e6b664;
+  --warn-soft: #3d3020; --crit: #f28b80; --crit-soft: #452522; --shadow: 0 1px 2px rgba(0,0,0,.3);
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font-family: var(--body); font-size: 15px; line-height: 1.5; }
+.wrap { max-width: 1240px; margin: 0 auto; padding-inline: 20px; padding-block: 20px 56px; display: grid; gap: 20px; }
+h1, h2, h3 { font-family: var(--display); font-weight: 500; margin: 0; text-wrap: balance; }
+.caps { text-transform: uppercase; letter-spacing: .12em; }
+.num { font-variant-numeric: tabular-nums; }
+button { font: inherit; color: inherit; cursor: pointer; }
+button:focus-visible, summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* Header */
+.top { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px 20px; }
+.brand { display: flex; align-items: center; gap: 12px; min-width: 0; }
+.brand svg { flex: none; }
+.brand h1 { font-size: 20px; color: var(--accent); letter-spacing: .14em; text-transform: uppercase; font-weight: 400; }
+.brand p { margin: 0; color: var(--ink-2); font-size: 13px; }
+.top-right { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+.live { display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px; border-radius: 999px; background: var(--good-soft); color: var(--good); font-size: 13px; font-weight: 700; }
+.live i { width: 8px; height: 8px; border-radius: 50%; background: var(--good); animation: pulse 2s infinite; }
+@keyframes pulse { 0%,100% { opacity: 1 } 50% { opacity: .35 } }
+.today { color: var(--ink-2); font-size: 13px; }
+.demo-btn { border: 1px solid var(--accent); background: transparent; color: var(--accent); padding: 7px 14px; border-radius: 999px; font-size: 13px; font-weight: 700; }
+.demo-btn:hover { background: var(--accent-soft); }
+.note { font-size: 12px; color: var(--muted); margin: -8px 0 0; }
+
+/* KPI tiles */
+.kpis { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 12px; }
+.kpi { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; display: grid; gap: 2px; align-content: start; }
+.kpi .label { font-size: 11px; color: var(--ink-2); letter-spacing: .08em; text-transform: uppercase; }
+.kpi .value { font-family: var(--display); font-size: 30px; line-height: 1.15; font-variant-numeric: tabular-nums; }
+.kpi .sub { font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.kpi.hero { background: var(--accent-soft); border-color: transparent; }
+.kpi.hero .value { color: var(--accent); }
+.kpi .value.bump { animation: bump .9s ease; }
+@keyframes bump { 0% { transform: scale(1) } 30% { transform: scale(1.12) } 100% { transform: scale(1) } }
+
+/* Main grid */
+.main { display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr); gap: 20px; align-items: start; }
+.side { display: grid; gap: 20px; }
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; box-shadow: var(--shadow); min-width: 0; }
+.panel-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; padding: 16px 18px 12px; border-bottom: 1px solid var(--line); }
+.panel-head h2 { font-size: 13px; letter-spacing: .14em; text-transform: uppercase; color: var(--accent); font-weight: 500; }
+.panel-head span { font-size: 12px; color: var(--muted); }
+
+/* Pills */
+.pill { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 700; letter-spacing: .04em; padding: 3px 9px; border-radius: 999px; white-space: nowrap; }
+.pill.booked { background: var(--good-soft); color: var(--good); }
+.pill.bridal { background: var(--accent-soft); color: var(--accent); }
+.pill.urgent { background: var(--crit-soft); color: var(--crit); }
+.pill.message { background: var(--warn-soft); color: var(--warn); }
+.pill.faq, .pill.referral { background: var(--surface-2); color: var(--ink-2); border: 1px solid var(--line); }
+.pill.after { background: transparent; color: var(--sage); border: 1px solid var(--sage); }
+.pill.new { background: var(--accent-soft); color: var(--accent); }
+.pill.contacted { background: var(--sage-soft); color: var(--sage); }
+
+/* Feed */
+.feed { list-style: none; margin: 0; padding: 0; }
+.call { padding: 14px 18px; border-bottom: 1px solid var(--line); display: grid; grid-template-columns: 52px minmax(0, 1fr) auto; gap: 4px 14px; }
+.call:last-child { border-bottom: 0; }
+.call.fresh { animation: fresh 2.4s ease; }
+@keyframes fresh { 0% { background: var(--accent-soft) } 100% { background: transparent } }
+.call time { font-size: 13px; color: var(--ink-2); font-variant-numeric: tabular-nums; padding-top: 1px; }
+.call .who { font-weight: 700; }
+.call .tags { display: flex; flex-wrap: wrap; gap: 6px; justify-content: flex-end; align-self: start; }
+.call .summary { grid-column: 2 / 4; color: var(--ink-2); font-size: 14px; margin: 0; }
+.call .value { font-variant-numeric: tabular-nums; color: var(--ink); font-weight: 700; }
+.call details { grid-column: 2 / 4; margin-top: 4px; }
+.call summary { font-size: 13px; color: var(--accent); cursor: pointer; width: fit-content; }
+.transcript { margin: 8px 0 0; padding: 12px 14px; background: var(--surface-2); border-radius: 8px; display: grid; gap: 6px; font-size: 13px; }
+.transcript p { margin: 0; }
+.transcript b { font-weight: 700; color: var(--accent); }
+.transcript b.caller { color: var(--ink-2); }
+.rec { font-size: 12px; color: var(--muted); margin-top: 4px; }
+
+/* Enquiries */
+.enq { padding: 14px 18px; border-bottom: 1px solid var(--line); display: grid; gap: 6px; }
+.enq:last-child { border-bottom: 0; }
+.enq-top { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; }
+.enq h3 { font-size: 17px; }
+.enq dl { margin: 0; display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 2px 12px; font-size: 13px; }
+.enq dt { color: var(--muted); }
+.enq dd { margin: 0; }
+.enq .est { font-size: 13px; color: var(--ink-2); }
+.enq .est strong { color: var(--ink); font-variant-numeric: tabular-nums; }
+
+/* Messages */
+.msg { padding: 12px 18px; border-bottom: 1px solid var(--line); display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 12px; align-items: start; }
+.msg:last-child { border-bottom: 0; }
+.msg.urgent-row { border-left: 3px solid var(--crit); padding-left: 15px; }
+.msg p { margin: 0; font-size: 13px; color: var(--ink-2); grid-column: 1 / 3; }
+.msg .who { font-weight: 700; font-size: 14px; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.msg button { border: 1px solid var(--line); background: var(--surface-2); border-radius: 6px; padding: 4px 10px; font-size: 12px; }
+.msg button:hover { border-color: var(--accent); }
+.msg.handled { opacity: .55; }
+.msg.handled.urgent-row { border-left-color: var(--line); }
+
+/* Diary */
+.diary-scroll { overflow-x: auto; }
+.diary { min-width: 640px; display: grid; grid-template-columns: 56px repeat(3, minmax(0, 1fr)); padding: 0 18px 18px; }
+.diary .col-head { padding: 12px 8px 10px; font-family: var(--display); font-size: 16px; border-bottom: 1px solid var(--line); }
+.diary .col-head small { display: block; font-family: var(--body); font-size: 12px; color: var(--muted); }
+.times, .col { position: relative; height: calc(42 * var(--row)); --row: 17px; }
+.col { border-left: 1px solid var(--line); background-image: repeating-linear-gradient(to bottom, var(--line) 0 1px, transparent 1px calc(4 * var(--row))); }
+.times span { position: absolute; right: 10px; font-size: 11px; color: var(--muted); transform: translateY(-50%); font-variant-numeric: tabular-nums; }
+.appt { position: absolute; left: 6px; right: 6px; border-radius: 6px; padding: 3px 8px; font-size: 12px; line-height: 1.3; overflow: hidden; background: var(--surface-2); border: 1px solid var(--line); }
+.appt strong { display: block; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.appt span { color: var(--ink-2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block; }
+.appt.ai { background: var(--accent-soft); border-color: var(--accent); }
+.appt.ai::after { content: "Poppy"; position: absolute; top: 3px; right: 6px; font-size: 10px; font-weight: 700; color: var(--accent); letter-spacing: .04em; }
+.appt.ai strong { padding-right: 38px; }
+.now { position: absolute; left: 56px; right: 18px; height: 0; border-top: 2px solid var(--crit); z-index: 2; pointer-events: none; }
+.now::before { content: ""; position: absolute; left: -5px; top: -6px; width: 10px; height: 10px; border-radius: 50%; background: var(--crit); }
+.diary-body { grid-column: 1 / -1; display: grid; grid-template-columns: subgrid; position: relative; padding-top: 10px; }
+.legend { display: flex; flex-wrap: wrap; gap: 14px; font-size: 12px; color: var(--ink-2); }
+.legend i { display: inline-block; width: 12px; height: 12px; border-radius: 3px; vertical-align: -2px; margin-right: 6px; border: 1px solid var(--line); background: var(--surface-2); }
+.legend i.ai { background: var(--accent-soft); border-color: var(--accent); }
+
+/* Week chart */
+.chart-wrap { padding: 12px 18px 18px; position: relative; }
+.chart-wrap svg { width: 100%; height: auto; display: block; overflow: visible; }
+.chart-wrap .grid line { stroke: var(--line); stroke-width: 1; }
+.chart-wrap text { fill: var(--muted); font-family: var(--body); font-size: 12px; }
+.chart-wrap text.day { fill: var(--ink-2); }
+.chart-wrap text.closed { fill: var(--sage); font-size: 11px; }
+.chart-wrap .bar { fill: var(--bar); }
+.chart-wrap .bar.today { fill: var(--accent); }
+.chart-wrap .hit { fill: transparent; cursor: default; }
+.chart-wrap .hit:hover + .bar, .chart-wrap .bar.hover { opacity: .8; }
+.chart-wrap text.val { fill: var(--ink); font-weight: 700; }
+.tip { position: absolute; pointer-events: none; background: var(--ink); color: var(--bg); font-size: 12px; padding: 6px 9px; border-radius: 6px; white-space: nowrap; transform: translate(-50%, -100%); opacity: 0; transition: opacity .12s; }
+.tip.show { opacity: 1; }
+.chart-foot { font-size: 12px; color: var(--muted); margin: 6px 0 0; }
+
+/* Toast */
+.toast { position: fixed; right: 20px; bottom: calc(20px + env(safe-area-inset-bottom, 0px)); max-width: min(360px, calc(100vw - 40px)); background: var(--surface); border: 1px solid var(--accent); border-radius: 12px; box-shadow: 0 8px 30px rgba(0,0,0,.18); padding: 14px 16px; display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 4px 12px; transform: translateY(140%); transition: transform .35s cubic-bezier(.2,.8,.2,1); z-index: 10; }
+.toast.show { transform: translateY(0); }
+.toast .dot { width: 34px; height: 34px; border-radius: 50%; background: var(--accent-soft); display: grid; place-items: center; grid-row: 1 / 3; }
+.toast h3 { font-size: 16px; color: var(--accent); }
+.toast p { margin: 0; font-size: 13px; color: var(--ink-2); }
+
+@media (max-width: 1080px) { .kpis { grid-template-columns: repeat(3, minmax(0, 1fr)); } .main { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 560px) {
+  .wrap { padding-inline: 16px; }
+  .kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .kpi .value { font-size: 26px; }
+  .call { grid-template-columns: 44px minmax(0, 1fr); }
+  .call .tags { grid-column: 2; justify-content: flex-start; }
+  .call .summary, .call details { grid-column: 2; }
+}
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div class="brand">
+      <svg width="40" height="40" viewBox="0 0 40 40" aria-hidden="true">
+        <g fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.2">
+          <circle cx="20" cy="11" r="7"/><circle cx="28.6" cy="17.2" r="7"/><circle cx="25.3" cy="27.3" r="7"/>
+          <circle cx="14.7" cy="27.3" r="7"/><circle cx="11.4" cy="17.2" r="7"/>
+        </g>
+        <circle cx="20" cy="20" r="4" fill="var(--accent)"/>
+      </svg>
+      <div>
+        <h1>Beauty in Bloom</h1>
+        <p>Poppy, your AI receptionist</p>
+      </div>
+    </div>
+    <div class="top-right">
+      <span class="live"><i></i>Live · answering calls</span>
+      <span class="today">Thursday 1 October · open until 7:30pm</span>
+      <button class="demo-btn" id="simulate" type="button">Simulate an incoming booking</button>
+    </div>
+  </header>
+  <p class="note">Mockup with example data. Names, bookings and calls are illustrative; prices are Beauty in Bloom's published prices.</p>
+
+  <section class="kpis" aria-label="Today at a glance">
+    <div class="kpi hero"><span class="label">Calls answered today</span><span class="value" id="k-calls">14</span><span class="sub">72 in the last 7 days</span></div>
+    <div class="kpi"><span class="label">Bookings made</span><span class="value" id="k-bookings">6</span><span class="sub">31 in the last 7 days</span></div>
+    <div class="kpi"><span class="label">Value booked</span><span class="value" id="k-value">£353.50</span><span class="sub">£1,642 in the last 7 days</span></div>
+    <div class="kpi"><span class="label">Bridal enquiries</span><span class="value">1</span><span class="sub">2 in the last 7 days</span></div>
+    <div class="kpi"><span class="label">After-hours calls</span><span class="value">2</span><span class="sub">17 in the last 7 days</span></div>
+    <div class="kpi"><span class="label">Average call</span><span class="value">2:48</span><span class="sub">minutes : seconds</span></div>
+  </section>
+
+  <div class="main">
+    <section class="panel" aria-labelledby="feed-h">
+      <div class="panel-head"><h2 id="feed-h">Live call feed</h2><span>Latest first · today</span></div>
+      <ul class="feed" id="feed"></ul>
+    </section>
+
+    <div class="side">
+      <section class="panel" aria-labelledby="enq-h">
+        <div class="panel-head"><h2 id="enq-h">Bridal enquiries</h2><span>By wedding date</span></div>
+        <div id="enquiries"></div>
+      </section>
+
+      <section class="panel" aria-labelledby="msg-h">
+        <div class="panel-head"><h2 id="msg-h">Messages</h2><span id="msg-count">2 waiting</span></div>
+        <div id="messages"></div>
+      </section>
+
+      <section class="panel" aria-labelledby="week-h">
+        <div class="panel-head"><h2 id="week-h">Calls answered by Poppy</h2><span>Last 7 days</span></div>
+        <div class="chart-wrap" id="chart"></div>
+      </section>
+    </div>
+  </div>
+
+  <section class="panel" aria-labelledby="diary-h">
+    <div class="panel-head">
+      <h2 id="diary-h">Today's diary</h2>
+      <div class="legend"><span><i></i>Booked in salon or online</span><span><i class="ai"></i>Booked by Poppy</span></div>
+    </div>
+    <div class="diary-scroll">
+      <div class="diary" id="diary"></div>
+    </div>
+  </section>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite">
+  <span class="dot" aria-hidden="true">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+  </span>
+  <h3>New booking by Poppy</h3>
+  <p id="toast-body"></p>
+</div>
+
+<script>
+const calls = [
+  { t: "14:12", who: "Emma Clarke", tags: [["booked", "Booked"]], value: 50,
+    summary: "Cut & Blow-Dry with Tracey, Fri 2 Oct at 10am. Returning client, recognised by caller ID.",
+    transcript: [
+      ["Poppy", "Hi Emma, it's Poppy at Beauty in Bloom, lovely to hear from you again! How can I help?"],
+      ["Emma", "Hiya, could I get a cut and blow-dry with Tracey this week?"],
+      ["Poppy", "Of course. Tracey has Friday the 2nd of October at 10am, or at half past 2. Which suits you?"],
+      ["Emma", "10 please."],
+      ["Poppy", "Lovely. That's a cut and blow-dry with Tracey on Friday the 2nd of October at 10am, fifty pounds. Shall I book that in?"],
+      ["Emma", "Yes please."],
+      ["Poppy", "All booked, and a text is on its way to your mobile. See you Friday!"]
+    ], rec: "1:54" },
+  { t: "13:47", who: "Hannah Wood", tags: [["bridal", "Bridal enquiry"]],
+    summary: "Wedding 12 June 2027 at The Craiglands. 5 hair, 3 makeup, would like a trial. Charlotte sent a text.",
+    transcript: [
+      ["Hannah", "Hi, I'm getting married next June and I'd love you to do our hair and makeup."],
+      ["Poppy", "Congratulations, how exciting! Bridal is Charlotte's speciality. Can I take a few details so she can call you back?"],
+      ["Hannah", "Yes, it's the 12th of June at The Craiglands."],
+      ["Poppy", "Beautiful venue. How many of you will need hair, and how many makeup?"],
+      ["Hannah", "Five for hair and three for makeup, including me."],
+      ["Poppy", "Lovely. Would you like a trial? They're in our bridal suite here in Ilkley."],
+      ["Hannah", "Yes please."],
+      ["Poppy", "Perfect. I've passed everything to Charlotte and she'll call you back personally."]
+    ], rec: "3:12" },
+  { t: "12:58", who: "Olivia Grant", tags: [["booked", "Booked"]], value: 105.5,
+    summary: "Balayage with toner, Charlotte, Tue 6 Oct at 10am. New client: patch test explained, booked more than 48 hours out." },
+  { t: "12:30", who: "Rebecca Shaw", tags: [["referral", "Referral"]],
+    summary: "Asked about facials. Poppy explained Ellen takes her own bookings and passed on Rebecca's details." },
+  { t: "11:15", who: "Lucy Marsh", tags: [["urgent", "! Urgent message"]],
+    summary: "Brows stinging since yesterday's tint. No advice given; urgent message logged and Charlotte sent a text." },
+  { t: "10:40", who: "Jade Turner", tags: [["booked", "Booked"]], value: 44,
+    summary: "BIAB with gel manicure plus nail art, Charlotte, Fri 2 Oct at 3pm." },
+  { t: "09:52", who: "Unknown caller", tags: [["faq", "Question"]],
+    summary: "Asked the price of a full head colour (£68, toner extra if needed) and where to park." },
+  { t: "09:20", who: "Karen Blake", tags: [["booked", "Booked"]], value: 68,
+    summary: "Full Head Colour with Katherine, Sat 10 Oct at 9am. Patch test on file from May." },
+  { t: "08:05", who: "Jo Bennett", tags: [["booked", "Booked"], ["after", "Before opening"]], value: 50,
+    summary: "Lash Lift & Tint with Charlotte, Wed 7 Oct at 11:30am. Called before the salon opened." },
+  { t: "07:31", who: "Amy Kirk", tags: [["booked", "Booked"], ["after", "Before opening"]], value: 36,
+    summary: "Gel Polish Pedicure with Charlotte, Sat 3 Oct at 1pm." }
+];
+
+const enquiries = [
+  { name: "Hannah Wood", date: "Sat 12 June 2027", venue: "The Craiglands, Ilkley", party: "5 hair · 3 makeup", trial: "Yes", status: ["new", "New"], est: "£900",
+    estNote: "bride hair & makeup, 2 party hair & makeup, 2 party hair, 1 trial" },
+  { name: "Megan Price", date: "Sun 22 Aug 2027", venue: "Denton Hall", party: "4 hair · 4 makeup", trial: "Yes", status: ["contacted", "Contacted"], est: "£890",
+    estNote: "bride hair & makeup, 3 party hair & makeup, 1 trial" }
+];
+
+const messages = [
+  { who: "Lucy Marsh", urgent: true, time: "11:15", text: "Brows stinging since yesterday's tint. Would like Charlotte to call back today. 07700 900 461" },
+  { who: "Sarah Dean", urgent: false, time: "Yesterday 7:42pm", text: "Is Katherine at Beehive in Silsden this Friday? Would like to book a blow-dry there. 07700 900 218" }
+];
+
+const week = [
+  { d: "Fri", date: "25 Sep", n: 9 }, { d: "Sat", date: "26 Sep", n: 16 },
+  { d: "Sun", date: "27 Sep", n: 4, closed: true }, { d: "Mon", date: "28 Sep", n: 5, closed: true },
+  { d: "Tue", date: "29 Sep", n: 11 }, { d: "Wed", date: "30 Sep", n: 13 },
+  { d: "Thu", date: "1 Oct", n: 14, today: true }
+];
+
+const diary = {
+  Charlotte: { role: "Hair, beauty & nails", appts: [
+    ["09:00", 45, "Gel Polish Manicure", "Priya S."], ["10:00", 60, "Lash Lift & Tint", "Jo B.", 1],
+    ["11:15", 60, "Brow Lamination", "Amy K."], ["13:00", 60, "Bridal trial", "Rachel P."],
+    ["14:30", 45, "HD Brows", "Kate W.", 1], ["15:30", 60, "BIAB with Gel Manicure", "Sam D."],
+    ["17:00", 30, "Eyebrow Wax & Tint", "Gemma L."] ] },
+  Tracey: { role: "Senior hairdresser", appts: [
+    ["09:00", 120, "Full Head Colour", "Margaret H."], ["11:15", 60, "Cut & Blow-Dry", "Helen R.", 1],
+    ["12:30", 30, "Men's Cut", "David T."], ["13:30", 120, "Half Head Foils", "Sophie A."],
+    ["15:45", 45, "Blow-Dry", "Laura C.", 1], ["16:45", 30, "Dry Trim", "Beth N."] ] },
+  Katherine: { role: "Senior hairdresser & bridal", appts: [
+    ["09:30", 180, "Balayage", "Olivia F.", 1], ["13:00", 60, "Cut & Blow-Dry", "Anna M."],
+    ["14:15", 90, "Root Retouch", "Julie P."], ["16:00", 60, "Cut & Blow-Dry", "Freya G."],
+    ["17:30", 45, "Blow-Dry", "Zoe H.", 1], ["18:30", 60, "Cut & Blow-Dry", "Ruth E."] ] }
+};
+
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const money = v => "£" + (Number.isInteger(v) ? v : v.toFixed(2));
+
+function callHTML(c, fresh) {
+  const tags = c.tags.map(([k, l]) => `<span class="pill ${k}">${esc(l)}</span>`).join("");
+  const val = c.value ? `<span class="value">${money(c.value)}</span>` : "";
+  const tr = c.transcript ? `<details><summary>Transcript</summary><div class="transcript">${
+    c.transcript.map(([w, s]) => `<p><b class="${w === "Poppy" ? "" : "caller"}">${esc(w)}:</b> ${esc(s)}</p>`).join("")
+  }<p class="rec">Call recording · ${c.rec}</p></div></details>` : "";
+  return `<li class="call${fresh ? " fresh" : ""}"><time>${esc(c.t)}</time><span class="who">${esc(c.who)}</span>
+    <span class="tags">${tags}${val}</span><p class="summary">${esc(c.summary)}</p>${tr}</li>`;
+}
+document.getElementById("feed").innerHTML = calls.map(c => callHTML(c)).join("");
+
+document.getElementById("enquiries").innerHTML = enquiries.map(e => `
+  <article class="enq">
+    <div class="enq-top"><h3>${esc(e.name)}</h3><span class="pill ${e.status[0]}">${esc(e.status[1])}</span></div>
+    <dl><dt>Wedding</dt><dd class="num">${esc(e.date)}</dd><dt>Venue</dt><dd>${esc(e.venue)}</dd>
+    <dt>Party</dt><dd>${esc(e.party)}</dd><dt>Trial</dt><dd>${esc(e.trial)}</dd></dl>
+    <p class="est" style="margin:0">Estimated <strong>${esc(e.est)}</strong> at published prices (${esc(e.estNote)})</p>
+  </article>`).join("");
+
+const msgEl = document.getElementById("messages");
+function renderMessages() {
+  const waiting = messages.filter(m => !m.handled).length;
+  document.getElementById("msg-count").textContent = waiting ? `${waiting} waiting` : "All handled";
+  msgEl.innerHTML = messages.map((m, i) => `
+    <div class="msg${m.urgent ? " urgent-row" : ""}${m.handled ? " handled" : ""}">
+      <span class="who">${esc(m.who)}${m.urgent ? '<span class="pill urgent">! Urgent</span>' : '<span class="pill message">Message</span>'}
+        <span style="font-weight:400;font-size:12px;color:var(--muted)">${esc(m.time)}</span></span>
+      <button type="button" data-i="${i}" id="msg-btn-${i}">${m.handled ? "Undo" : "Mark handled"}</button>
+      <p>${esc(m.text)}</p>
+    </div>`).join("");
+}
+msgEl.addEventListener("click", e => {
+  const b = e.target.closest("button[data-i]"); if (!b) return;
+  const m = messages[+b.dataset.i]; m.handled = !m.handled; renderMessages();
+});
+renderMessages();
+
+/* Week chart: single series, one hue, today emphasised */
+(function chart() {
+  const W = 560, H = 210, L = 30, R = 8, T = 22, B = 44, max = 20;
+  const plotW = W - L - R, plotH = H - T - B, step = plotW / week.length, bw = Math.min(46, step * .62);
+  const y = v => T + plotH - (v / max) * plotH;
+  let s = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Calls answered per day, last 7 days: ${week.map(w => w.d + " " + w.n).join(", ")}"><g class="grid">`;
+  for (const v of [0, 5, 10, 15, 20]) s += `<line x1="${L}" x2="${W - R}" y1="${y(v)}" y2="${y(v)}"/><text x="${L - 8}" y="${y(v) + 4}" text-anchor="end">${v}</text>`;
+  s += `</g>`;
+  week.forEach((w, i) => {
+    const cx = L + step * i + step / 2, x = cx - bw / 2, top = y(w.n), base = y(0), r = 4;
+    const path = `M${x},${base} L${x},${top + r} Q${x},${top} ${x + r},${top} L${x + bw - r},${top} Q${x + bw},${top} ${x + bw},${top + r} L${x + bw},${base} Z`;
+    s += `<rect class="hit" x="${cx - step / 2}" y="${T}" width="${step}" height="${plotH}" data-i="${i}"/>`;
+    s += `<path class="bar${w.today ? " today" : ""}" d="${path}" data-bar="${i}"/>`;
+    if (w.today || w.closed) s += `<text class="val" x="${cx}" y="${top - 7}" text-anchor="middle">${w.n}</text>`;
+    s += `<text class="day" x="${cx}" y="${base + 18}" text-anchor="middle">${w.d}</text>`;
+    if (w.closed) s += `<text class="closed" x="${cx}" y="${base + 34}" text-anchor="middle">Closed</text>`;
+    if (w.today) s += `<text class="closed" x="${cx}" y="${base + 34}" text-anchor="middle" style="fill:var(--accent)">Today</text>`;
+  });
+  s += `</svg><div class="tip" id="tip"></div><p class="chart-foot">Sunday and Monday calls came in while the salon was closed. Poppy still took them.</p>`;
+  const wrap = document.getElementById("chart"); wrap.innerHTML = s;
+  const tip = document.getElementById("tip"), svg = wrap.querySelector("svg");
+  wrap.querySelectorAll(".hit").forEach(h => {
+    h.addEventListener("mouseenter", () => {
+      const w = week[+h.dataset.i], bar = wrap.querySelector(`[data-bar="${h.dataset.i}"]`);
+      bar.classList.add("hover");
+      const bb = bar.getBoundingClientRect(), wb = wrap.getBoundingClientRect();
+      tip.textContent = `${w.d} ${w.date} · ${w.n} calls${w.closed ? " · salon closed" : ""}${w.today ? " so far" : ""}`;
+      tip.style.left = (bb.left - wb.left + bb.width / 2) + "px";
+      tip.style.top = (bb.top - wb.top - 8) + "px";
+      tip.classList.add("show");
+    });
+    h.addEventListener("mouseleave", () => {
+      wrap.querySelectorAll(".bar.hover").forEach(b => b.classList.remove("hover"));
+      tip.classList.remove("show");
+    });
+  });
+})();
+
+/* Diary: 09:00 to 19:30 in 15-minute rows */
+(function renderDiary() {
+  const ROW = 17, start = 9 * 60, toMin = t => { const [h, m] = t.split(":").map(Number); return h * 60 + m; };
+  const names = Object.keys(diary);
+  let head = `<div class="col-head"></div>` + names.map(n => `<div class="col-head">${esc(n)}<small>${esc(diary[n].role)}</small></div>`).join("");
+  let times = `<div class="times">`;
+  for (let h = 9; h <= 19; h++) times += `<span style="top:${(h * 60 - start) / 15 * ROW}px">${h}:00</span>`;
+  times += `</div>`;
+  const cols = names.map(n => `<div class="col">${diary[n].appts.map(([t, dur, svc, client, ai]) => {
+    const top = (toMin(t) - start) / 15 * ROW, h = dur / 15 * ROW - 3;
+    return `<div class="appt${ai ? " ai" : ""}" style="top:${top + 1}px;height:${h}px" title="${esc(t + " " + svc + " · " + client)}"><strong>${esc(svc)}</strong>${h > 40 ? `<span>${esc(t)} · ${esc(client)}</span>` : ""}</div>`;
+  }).join("")}</div>`).join("");
+  const nowTop = (toMin("14:20") - start) / 15 * ROW + 10;
+  document.getElementById("diary").innerHTML = head + `<div class="diary-body">${times}${cols}<div class="now" style="top:${nowTop}px" aria-label="Now, 2:20pm"></div></div>`;
+})();
+
+/* Demo: simulate a booking landing */
+let calls_ = 14, bookings = 6, value = 353.5, simIndex = 0;
+const sims = [
+  { who: "Charlotte Hawkins", svc: "Cut & Blow-Dry with Tracey, Thu 8 Oct at 6pm", price: 50,
+    summary: "Cut & Blow-Dry with Tracey, Thu 8 Oct at 6pm. Returning client, greeted by name." },
+  { who: "Grace Holt", svc: "Lash Lift & Tint with Charlotte, Wed 7 Oct at 2pm", price: 50,
+    summary: "Lash Lift & Tint with Charlotte, Wed 7 Oct at 2pm. Patch test on file." },
+  { who: "Ellie Ward", svc: "Half Head Foils with Katherine, Sat 10 Oct at 11:30am", price: 62,
+    summary: "Half Head Foils with Katherine, Sat 10 Oct at 11:30am. New client: patch test booked for Wednesday." }
+];
+function chime() {
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    [880, 1318.5].forEach((f, i) => {
+      const o = ctx.createOscillator(), g = ctx.createGain(), t = ctx.currentTime + i * .14;
+      o.frequency.value = f; o.type = "sine";
+      g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(.12, t + .02); g.gain.exponentialRampToValueAtTime(.001, t + .6);
+      o.connect(g).connect(ctx.destination); o.start(t); o.stop(t + .65);
+    });
+  } catch (e) {}
+}
+function bump(id, text) { const el = document.getElementById(id); el.textContent = text; el.classList.remove("bump"); void el.offsetWidth; el.classList.add("bump"); }
+let toastTimer;
+document.getElementById("simulate").addEventListener("click", () => {
+  const s = sims[simIndex++ % sims.length];
+  const now = new Date(), t = now.toTimeString().slice(0, 5);
+  document.getElementById("feed").insertAdjacentHTML("afterbegin", callHTML({ t: "Now", who: s.who, tags: [["booked", "Booked"]], value: s.price, summary: s.summary }, true));
+  calls_++; bookings++; value += s.price;
+  bump("k-calls", calls_); bump("k-bookings", bookings); bump("k-value", "£" + value.toFixed(2).replace(/\.00$/, ""));
+  document.getElementById("toast-body").textContent = `${s.who}: ${s.svc} · ${money(s.price)}. Confirmation text sent.`;
+  const toast = document.getElementById("toast"); toast.classList.add("show");
+  clearTimeout(toastTimer); toastTimer = setTimeout(() => toast.classList.remove("show"), 5000);
+  chime();
+});
+</script>
