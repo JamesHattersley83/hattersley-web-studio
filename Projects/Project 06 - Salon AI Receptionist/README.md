@@ -1,8 +1,8 @@
-# Project 02: Salon AI Receptionist (Demo)
+# Project 06: Salon AI Receptionist (Demo)
 
 🚧 Status: Planning
 
-An AI receptionist for hair salons. It answers the phone around the clock, books, moves and cancels appointments, answers questions, and takes messages. Each booking appears on a live owner dashboard, and the client gets a confirmation text.
+An AI receptionist for hair and beauty salons. It answers the phone around the clock, books, moves and cancels appointments, answers questions, and takes messages. Each booking appears on a live owner dashboard, and the client gets a confirmation text.
 
 ## The problem it solves
 
@@ -13,7 +13,7 @@ Stylists have their hands in someone's hair when the phone rings. Salons miss a 
 | File | Purpose |
 |---|---|
 | [`BUILD-PROMPT.md`](./BUILD-PROMPT.md) | The full build spec and prompt, already filled in for **Beauty in Bloom, Ilkley**. Paste it into Claude Code. |
-| [`salons/beauty-in-bloom.yaml`](./salons/beauty-in-bloom.yaml) | Beauty in Bloom's config: team, services, hours, policies and FAQs. Replace the `# EST` prices before the demo. |
+| [`salons/beauty-in-bloom.yaml`](./salons/beauty-in-bloom.yaml) | Beauty in Bloom's config: team, services, prices (from their website), hours, policies and FAQs. Check the `# EST` durations before the demo. |
 | [`salons/beauty-in-bloom-research.md`](./salons/beauty-in-bloom-research.md) | What's confirmed, what still needs checking, pitch angles and sources. |
 | [`salons/_template.yaml`](./salons/_template.yaml) | Blank config for the next salon prospect. |
 
@@ -28,8 +28,8 @@ Vapi (voice) · Next.js + TypeScript on Vercel · Supabase (data and realtime) �
 ## How to run the demo meeting (15 minutes)
 
 **Before the meeting**
-- Get the salon's real services, prices, stylists and hours from their booking page and Instagram, and seed the demo with them. A demo that uses **their** name and **their** stylists sells far better than a generic one.
-- Seed the owner's mobile as a returning client, so the AI greets them by name.
+- Work through the "Still to fill in" checklist in `salons/beauty-in-bloom-research.md` (mainly treatment durations and who does what).
+- Seed Charlotte's mobile as a returning client, so Poppy greets her by name.
 - Run `reset-demo`, then do one test call from the salon's postcode area if you can.
 - Have the `/demo` web-call button open as a backup in case phone signal is poor.
 
